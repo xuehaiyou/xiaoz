@@ -1,0 +1,26 @@
+#定义主成分方程
+F_float = F.astype(np.float)
+a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18 = \
+symbols('a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 a13 a14 a15 a16 a17 a18')
+eq2_1 = np.array(F_float[:, 0])@np.array([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18]).T
+eq2_2 = np.array(F_float[:, 1])@np.array([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18]).T
+#定义回归方程，代入主成分方程
+x1 = eq2_1
+x2 = eq2_2
+y = symbols('y')
+inte = md.params[0]
+b1 = md.params[1]
+b2 = md.params[2]
+b3 = md.params[3]
+eq1 = y-(np.array([b1, b2, b3, inte])@np.array([x1, x2, x1*x2, 1]).T)
+#代入值
+weizhi = (a1, a2, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18)#删除a2
+list_2015 = list(c[5])#c是各因素zscore的值
+del list_2015[2]
+reps = list(zip(weizhi, tuple(list_2015)))
+reps
+eq3 = eq1.subs(reps)
+#代入最小面积
+eq4 = eq3.subs({y:25190.8})
+#求解最低收购价的下限
+solve(eq4, a3)
